@@ -6,14 +6,14 @@
     "lint": "turbo run lint",
     "format:check": "prettier --check \"**/*.{ts,tsx,md,mdx,css}\"",
     "format": "prettier --write \"**/*.{ts,tsx,md,mdx,css}\"",
-    "release": "yarn release:prepare && yarn changelog && yarn release-commit",
-    "release:prepare": "git fetch --tags && conventional-recommended-bump -p angular | xargs yarn version:auto $1",
-    "release:canary": "yarn release:prepare && node scripts/get-unstable-version canary | xargs yarn version:auto $1",
+    "release": "npm run release:prepare && npm run changelog && npm run release-commit",
+    "release:prepare": "git fetch --tags && conventional-recommended-bump -p angular | xargs npm run version:auto $1",
+    "release:canary": "npm run release:prepare && node scripts/get-unstable-version canary | xargs npm run version:auto $1",
     "release-commit": "git add -u && git commit -m \"release: v${npm_package_version}\"",
     "smoke": "node scripts/e2e/smoke.mjs",
     "test": "turbo run test",
     "version": "lerna version --force-publish -y --no-push --no-changelog --no-git-tag-version $npm_package_version",
-    "version:auto": "yarn version --no-git-tag-version --new-version $1",
+    "version:auto": "npm run version --no-git-tag-version --new-version $1",
     "changelog": "node scripts/create-changelog"
   },
   "devDependencies": {
@@ -30,7 +30,7 @@
     "turbo": "^2.3.3"
   },
   "name": "puck-repo",
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "npm@9.8.0",
   "workspaces": [
     "apps/*",
     "recipes/*",
