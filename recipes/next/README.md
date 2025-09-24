@@ -36,3 +36,12 @@ To adopt this recipe you will need to:
 - Implement a custom puck configuration in `puck.config.tsx`
 
 By default, this recipe will generate static pages by setting `dynamic` to [`force-static`](https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamic) in the `/app/[...puckPath]/page.tsx`. This will strip headers and cookies. If you need dynamic pages, you can delete this.
+
+## Notes for contributors
+
+- Minimum Node version used during testing: node >= 20.19.0
+- Use Yarn/Corepack to install packages:
+  - corepack enable && corepack prepare yarn@stable --activate
+  - cd recipes/next && yarn add @fluentui/react-components fluentui-next-appdir-directive @fluentui/react-portal-compat @fluentui/react-icons
+- Runtime packages added: @fluentui/react-components, fluentui-next-appdir-directive, @fluentui/react-portal-compat, @fluentui/react-icons
+- Recommended devDependencies (if not already present): @types/react, @types/react-dom

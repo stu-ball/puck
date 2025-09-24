@@ -9,8 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fluentui/react-components": "^9.70.0",
+    "@fluentui/react-icons": "^2.0.310",
+    "@fluentui/react-portal-compat": "^9.2.16",
     "@measured/puck": "*",
     "classnames": "^2.3.2",
+    "fluentui-next-appdir-directive": "^0.3.0",
     "next": "^15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

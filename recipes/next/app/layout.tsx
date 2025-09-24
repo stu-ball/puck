@@ -1,13 +1,18 @@
-import "./styles.css";
+import './globals.css';
+import type { ReactNode } from 'react';
+import FluentRoot from './FluentRoot';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export const metadata = {
+  title: 'Puck (with Fluent UI)',
+  description: 'Puck recipe with Fluent UI integration',
+};
+
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <FluentRoot>{children}</FluentRoot>
+      </body>
     </html>
   );
 }

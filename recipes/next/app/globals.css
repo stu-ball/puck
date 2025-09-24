@@ -1,0 +1,20 @@
+/* Minimal safe global styles for Fluent UI integration */
+:root {
+  --ff-system: "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, -apple-system, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+html, body, #__next {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--ff-system);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #ffffff;
+  color: #000;
+}
+
+/* Minimal reset for app container */
+div[hidden] { display: none; }
