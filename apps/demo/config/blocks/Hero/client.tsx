@@ -55,6 +55,7 @@ export const Hero: ComponentConfig<{
             index: idx,
             title: quote.author,
             description: quote.content,
+            label: quote.author,
           }))
           .filter((item) => {
             if (filters?.author && item.title !== filters?.author) {
@@ -72,6 +73,7 @@ export const Hero: ComponentConfig<{
             if (item.description.toLowerCase().indexOf(queryLowercase) > -1) {
               return true;
             }
+            return false;
           });
       },
       mapRow: (item) => ({
@@ -79,7 +81,7 @@ export const Hero: ComponentConfig<{
         description: <span>{item.description}</span>,
       }),
       mapProp: (result) => {
-        return { index: result.index, label: result.description };
+        return { index: result.index, label: result.title };
       },
       getItemSummary: (item) => item.label,
     },

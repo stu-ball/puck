@@ -366,8 +366,7 @@ function PuckProvider<
       (s) => s.state.data,
       (data) => {
         if (onChange) {
-          if (fdeq(data, previousData.current)) return;
-
+          // PATCH: Always call onChange, even if data is deeply equal, to work around mutation bugs
           onChange(data as G["UserData"]);
 
           previousData.current = data;

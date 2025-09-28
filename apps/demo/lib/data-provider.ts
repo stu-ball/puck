@@ -12,8 +12,14 @@ export interface PageData {
 }
 
 async function readDB(): Promise<Record<string, PageData>> {
-  const data = await fs.readFile(DB_PATH, "utf-8");
-  return JSON.parse(data);
+  try {
+    const data = await fs.readFile(DB_PATH, "utf-8");
+    return JSON.parse(data);
+  } catch (e) {
+    // If file doesn't exist, return empty object
+    if ((e as any).code === "ENOENT") return {};
+    throw e;
+  }
 }
 
 async function writeDB(db: Record<string, PageData>): Promise<void> {
@@ -35,9 +41,16 @@ export async function createPage(pathKey: string, data: PageData): Promise<void>
 }
 
 export async function updatePage(pathKey: string, data: PageData): Promise<void> {
+  // Read existing DB, merge with new data for this page
   const db = await readDB();
-  // Upsert: create the page if it does not exist
-  db[pathKey] = data;
+  db[pathKey] = {
+    ...db[pathKey],
+    ...data,
+    // Always replace content/zones/root to avoid stale state
+    content: data.content,
+    zones: data.zones,
+    root: data.root,
+  };
   await writeDB(db);
 }
 

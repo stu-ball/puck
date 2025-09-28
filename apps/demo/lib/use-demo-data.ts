@@ -31,7 +31,7 @@ export const useDemoData = ({
         const apiPath = path === "/" ? "/api/pages" : `/api/pages${path}`;
         // Add cache-busting param to always fetch fresh data
         const res = await fetch(`${apiPath}?t=${Date.now()}`, {
-          cache: "no-store"
+          cache: "reload"
         });
         if (res.ok) {
           const json = await res.json();

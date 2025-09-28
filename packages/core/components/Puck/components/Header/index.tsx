@@ -128,7 +128,8 @@ const HeaderInner = <
           <CustomHeaderActions>
             <Button
               onClick={() => {
-                const data = appStore.getState().state.data;
+                // Force a new object reference to ensure latest state is published
+                const data = JSON.parse(JSON.stringify(appStore.getState().state.data));
                 onPublish && onPublish(data as G["UserData"]);
               }}
               icon={<Globe size="14px" />}

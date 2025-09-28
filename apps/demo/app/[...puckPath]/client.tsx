@@ -4,8 +4,9 @@ import { AutoField, FieldLabel, Puck, Render } from "@/core";
 import headingAnalyzer from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config from "../../config";
 import { useDemoData } from "../../lib/use-demo-data";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Type } from "lucide-react";
+import type { UserData } from "../../config/types";
 import {
   Button,
   Title1,
@@ -25,14 +26,45 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   });
 
   const [isClient, setIsClient] = useState(false);
+  const latestDataRef = useRef<Partial<UserData> | undefined>(undefined);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  useEffect(() => {
+    latestDataRef.current = data;
+  }, [data]);
+
+  const handleChange = useCallback(
+    (nextData: Partial<UserData>) => {
+      latestDataRef.current = nextData;
+      setData(nextData);
+    },
+    [setData]
+  );
+
+  const handlePublish = useCallback(async () => {
+    const latestData = latestDataRef.current;
+    if (!latestData) return;
+
+    const apiPath = path === "/" ? "/api/pages" : `/api/pages${path}`;
+    // Always send the freshest data from the editor, no normalization or remapping
+    await fetch(apiPath, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data: latestData }),
+    });
+
+    setData(latestData);
+  }, [path, setData]);
+
   if (!isClient) return null;
 
-  const params = new URL(window.location.href).searchParams;
+  const params =
+    typeof window !== "undefined"
+      ? new URL(window.location.href).searchParams
+      : new URLSearchParams();
 
   if (isEdit) {
     if (
@@ -46,32 +78,8 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           <Puck
             config={config}
             data={data}
-            onPublish={async (data) => {
-              // Normalize: homepage PUT should be /api/pages, not /api/pages/
-              const apiPath = path === "/" ? "/api/pages" : `/api/pages${path}`;
-              // Ensure both content and zones["default-zone"] are kept in sync
-              let normalizedData = { ...data };
-              if (
-                data &&
-                data.zones &&
-                Array.isArray(data.zones["default-zone"])
-              ) {
-                normalizedData.content = data.zones["default-zone"];
-              } else if (data && Array.isArray(data.content)) {
-                normalizedData.zones = {
-                  ...data.zones,
-                  "default-zone": data.content,
-                };
-              }
-              await fetch(apiPath, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ data: normalizedData }),
-              });
-              setData(normalizedData);
-              // Force reload data from backend to ensure sync
-              window.location.reload();
-            }}
+            onChange={handleChange}
+            onPublish={handlePublish}
             plugins={[headingAnalyzer]}
             headerPath={path}
             iframe={{

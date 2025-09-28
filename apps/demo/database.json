@@ -11,7 +11,7 @@
         "type": "Hero",
         "props": {
           "id": "Hero-1687283596554",
-          "title": "This page was built with Puck",
+          "title": "This page was built with Puck!",
           "description": "Puck is the self-hosted visual editor for React. Bring your own components and make site changes instantly, without a deploy.",
           "buttons": [
             {
@@ -42,6 +42,21 @@
           "title": false,
           "description": false
         }
+      },
+      {
+        "type": "Heading",
+        "props": {
+          "align": "left",
+          "text": "Heading",
+          "size": "m",
+          "layout": {
+            "spanCol": 1,
+            "spanRow": 1,
+            "padding": "8px",
+            "grow": false
+          },
+          "id": "Heading-8490d1ab-028e-4ee7-85a4-da9e87f6e28a"
+        }
       }
     ],
     "zones": {
@@ -51,7 +66,7 @@
           "type": "Hero",
           "props": {
             "id": "Hero-1687283596554",
-            "title": "This page was built with Puck",
+            "title": "This page was built with Puck!",
             "description": "Puck is the self-hosted visual editor for React. Bring your own components and make site changes instantly, without a deploy.",
             "buttons": [
               {
