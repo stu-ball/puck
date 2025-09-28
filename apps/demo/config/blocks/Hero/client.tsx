@@ -14,7 +14,10 @@ export const Hero: ComponentConfig<{
       option: boolean;
     };
   };
+  // Add label for sidebar/breadcrumbs
+  label: "Hero";
 }> = {
+  label: "Hero",
   fields: {
     quote: {
       type: "external",

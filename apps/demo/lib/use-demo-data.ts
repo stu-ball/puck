@@ -50,6 +50,15 @@ export const useDemoData = ({
     }
   }, [path, isEdit, key]);
 
+  // Normalize blocks for editor compatibility
+  const normalizedData = {
+    ...data,
+    blocks:
+      (data && Array.isArray(data["zones"]?.["default-zone"]))
+        ? data["zones"]["default-zone"]
+        : (Array.isArray(data["content"]) ? data["content"] : [])
+  };
+
   // Normally this would happen on the server, but we can't
   // do that because we're using local storage as a database
   const [resolvedData, setResolvedData] = useState<Partial<UserData>>(data);
