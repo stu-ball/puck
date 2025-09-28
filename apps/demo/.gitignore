@@ -33,4 +33,4 @@ yarn-error.log*
 # vercel
 .vercel
 
-database.json
+# database.json should be tracked by git for versioning/editor state
