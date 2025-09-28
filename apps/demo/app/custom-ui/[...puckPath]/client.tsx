@@ -235,7 +235,12 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
       <div style={{ position: "sticky", top: 0, zIndex: 2 }}>
         <CustomHeader
           onPublish={async (data: Data) => {
-            localStorage.setItem(dataKey, JSON.stringify(data));
+            await fetch(`/api/pages${path}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ data }),
+            });
+            setData(data);
           }}
         />
       </div>
@@ -348,7 +353,7 @@ const CustomDrawer = () => {
 };
 
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
-  const { data, resolvedData, key } = useDemoData({
+  const { data, resolvedData, key, setData } = useDemoData({
     path,
     isEdit,
   });
@@ -514,7 +519,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     >
       <div>
         <h1>404</h1>
-        <p>Page does not exist in session storage</p>
+        <p>Page not found</p>
       </div>
     </div>
   );

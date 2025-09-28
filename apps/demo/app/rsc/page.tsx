@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import config from "../../config/server";
-import { initialData } from "../../config/initial-data";
-import { Components, RootProps } from "../../config/types";
 
+import { Components, RootProps } from "../../config/types";
+import { getPage } from "../../lib/data-provider";
 import { Config } from "@/core";
 import { Render, resolveAllData } from "@/core/bundle/rsc";
 
@@ -11,13 +11,14 @@ import { Render, resolveAllData } from "@/core/bundle/rsc";
 const conf = config as unknown as Config;
 
 export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPage("/");
   return {
-    title: initialData["/"].root.title,
+    title: page?.root?.props?.title ?? "Puck Demo",
   };
 }
 
 export default async function Page() {
-  const data = initialData["/"];
+  const data = await getPage("/") || {};
   const metadata = {
     example: "Hello, world",
   };

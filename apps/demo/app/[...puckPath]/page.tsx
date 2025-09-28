@@ -72,7 +72,10 @@ export default async function Page({
 }: {
   params: Promise<{ framework: string; uuid: string; puckPath: string[] }>;
 }) {
-  const { puckPath } = await params;
+  let { puckPath } = await params;
+  if (!puckPath || puckPath.length === 0) {
+    puckPath = [""];
+  }
 
   // Editor namespace: /puck/...
   if (puckPath && puckPath[0] === "puck") {

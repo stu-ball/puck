@@ -1,14 +1,18 @@
 const resolvePuckPath = (puckPath: string[] = []) => {
-  const hasPath = puckPath.length > 0;
+  // Normalize: treat [""] and [] as root
+  const normalized = !puckPath || puckPath.length === 0 || (puckPath.length === 1 && puckPath[0] === "") ? [] : puckPath;
 
-  const isEdit = hasPath ? puckPath[puckPath.length - 1] === "edit" : false;
+  const hasPath = normalized.length > 0;
+  const isEdit = hasPath ? normalized[normalized.length - 1] === "edit" : false;
+
+  let pathArr = isEdit ? normalized.slice(0, normalized.length - 1) : normalized;
+  let path = "/" + pathArr.join("/");
+  if (path === "/") return { isEdit, path: "/" };
+  if (path.endsWith("/") && path.length > 1) path = path.slice(0, -1);
 
   return {
     isEdit,
-    path: `/${(isEdit
-      ? [...puckPath].slice(0, puckPath.length - 1)
-      : [...puckPath]
-    ).join("/")}`,
+    path,
   };
 };
 

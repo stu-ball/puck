@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import config, { componentKey } from "../config";
-import { initialData } from "../config/initial-data";
+
 import { Metadata, resolveAllData } from "@/core";
 import { Components, UserData } from "../config/types";
 import { RootProps } from "../config/root";
@@ -20,17 +20,26 @@ export const useDemoData = ({
 
   const key = `puck-demo:${componentKey}:${path}`;
 
-  const [data] = useState<Partial<UserData>>(() => {
-    if (isBrowser) {
-      const dataStr = localStorage.getItem(key);
+  const [data, setData] = useState<Partial<UserData>>({});
 
-      if (dataStr) {
-        return JSON.parse(dataStr);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch(`/api/pages${path}`);
+        if (res.ok) {
+          const json = await res.json();
+          setData(json);
+        } else {
+          setData({});
+        }
+      } catch {
+        setData({});
       }
-
-      return initialData[path] || {};
     }
-  });
+    if (isBrowser) {
+      fetchData();
+    }
+  }, [path, isEdit, key]);
 
   // Normally this would happen on the server, but we can't
   // do that because we're using local storage as a database
@@ -42,7 +51,7 @@ export const useDemoData = ({
         setResolvedData
       );
     }
-  }, [data, isEdit]);
+  }, [data, isEdit, metadata]);
 
   useEffect(() => {
     if (!isEdit) {
@@ -51,5 +60,5 @@ export const useDemoData = ({
     }
   }, [data, isEdit]);
 
-  return { data, resolvedData, key };
+  return { data, resolvedData, key, setData };
 };

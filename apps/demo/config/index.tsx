@@ -12,7 +12,7 @@ import { Space } from "./blocks/Space";
 
 import Root from "./root";
 import { UserConfig } from "./types";
-import { initialData } from "./initial-data";
+
 
 // We avoid the name config as next gets confused
 export const conf: UserConfig = {
@@ -49,7 +49,7 @@ export const conf: UserConfig = {
 };
 
 export const componentKey = Buffer.from(
-  `${Object.keys(conf.components).join("-")}-${JSON.stringify(initialData)}`
+  `{Object.keys(conf.components).join("-")}`
 ).toString("base64");
 
 export default conf;

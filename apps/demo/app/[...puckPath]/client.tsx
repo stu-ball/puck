@@ -12,7 +12,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     example: "Hello, world",
   };
 
-  const { data, resolvedData, key } = useDemoData({
+  const { data, resolvedData, key, setData } = useDemoData({
     path,
     isEdit,
     metadata,
@@ -35,7 +35,12 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           config={config}
           data={data}
           onPublish={async (data) => {
-            localStorage.setItem(key, JSON.stringify(data));
+            await fetch(`/api/pages${path}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ data }),
+            });
+            setData(data);
           }}
           plugins={[headingAnalyzer]}
           headerPath={path}
@@ -96,7 +101,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     >
       <div>
         <h1>404</h1>
-        <p>Page does not exist in session storage</p>
+        <p>Page not found</p>
       </div>
     </div>
   );
