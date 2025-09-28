@@ -576,7 +576,8 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
     return (
       <div className={className} style={style} ref={ref}>
         {content.map((item) => {
-          const Component = config.components[item.type];
+          const block = item as { id: string; [key: string]: any };
+          const Component = config.components[block.type];
           if (Component) {
             return (
               <DropZoneRenderItem

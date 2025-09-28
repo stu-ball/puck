@@ -1,18 +1,57 @@
 {
   "/": {
-    "data": {
-      "root": {
+    "root": {
+      "props": {
+        "title": "Puck Demo Home"
+      }
+    },
+    "content": [
+      {
+        "id": "Hero-1687283596554",
+        "type": "Hero",
         "props": {
-          "title": "Puck Demo Home",
-          "id": "root"
+          "id": "Hero-1687283596554",
+          "title": "This page was built with Puck",
+          "description": "Puck is the self-hosted visual editor for React. Bring your own components and make site changes instantly, without a deploy.",
+          "buttons": [
+            {
+              "label": "Visit GitHub",
+              "href": "https://github.com/measuredco/puck",
+              "props": {
+                "id": "block-0-1759046208871-c33bks"
+              }
+            },
+            {
+              "label": "Edit this page",
+              "href": "/edit",
+              "variant": "secondary",
+              "props": {
+                "id": "block-1-1759046208871-kr4kpn"
+              }
+            }
+          ],
+          "image": {
+            "url": "https://images.unsplash.com/photo-1687204209659-3bded6aecd79?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
+            "mode": "inline",
+            "content": []
+          },
+          "padding": "128px",
+          "align": "left"
+        },
+        "readOnly": {
+          "title": false,
+          "description": false
         }
-      },
-      "content": [
+      }
+    ],
+    "zones": {
+      "default-zone": [
         {
           "id": "Hero-1687283596554",
           "type": "Hero",
           "props": {
-            "title": "This page was built with Puck!",
+            "id": "Hero-1687283596554",
+            "title": "This page was built with Puck",
             "description": "Puck is the self-hosted visual editor for React. Bring your own components and make site changes instantly, without a deploy.",
             "buttons": [
               {
@@ -37,56 +76,14 @@
               "content": []
             },
             "padding": "128px",
-            "align": "left",
-            "id": "block-0-1759046208871-tlmq8j"
+            "align": "left"
           },
           "readOnly": {
             "title": false,
             "description": false
           }
         }
-      ],
-      "zones": {
-        "default-zone": [
-          {
-            "id": "Hero-1687283596554",
-            "type": "Hero",
-            "props": {
-              "title": "This page was built with Puck!",
-              "description": "Puck is the self-hosted visual editor for React. Bring your own components and make site changes instantly, without a deploy.",
-              "buttons": [
-                {
-                  "label": "Visit GitHub",
-                  "href": "https://github.com/measuredco/puck",
-                  "props": {
-                    "id": "block-0-1759046208871-c33bks"
-                  }
-                },
-                {
-                  "label": "Edit this page",
-                  "href": "/edit",
-                  "variant": "secondary",
-                  "props": {
-                    "id": "block-1-1759046208871-kr4kpn"
-                  }
-                }
-              ],
-              "image": {
-                "url": "https://images.unsplash.com/photo-1687204209659-3bded6aecd79?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
-                "mode": "inline",
-                "content": []
-              },
-              "padding": "128px",
-              "align": "left",
-              "id": "block-0-1759046208871-tlmq8j"
-            },
-            "readOnly": {
-              "title": false,
-              "description": false
-            }
-          }
-        ]
-      }
+      ]
     }
   }
 }

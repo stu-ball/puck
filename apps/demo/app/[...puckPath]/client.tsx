@@ -69,12 +69,8 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                 body: JSON.stringify({ data: normalizedData }),
               });
               setData(normalizedData);
-              // Reload the view page tab if open
-              if (typeof window !== "undefined") {
-                const viewUrl = window.location.origin + path;
-                // Try to find an open tab with the view page and reload it
-                window.open(viewUrl, "_blank");
-              }
+              // Force reload data from backend to ensure sync
+              window.location.reload();
             }}
             plugins={[headingAnalyzer]}
             headerPath={path}

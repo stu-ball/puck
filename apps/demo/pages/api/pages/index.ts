@@ -18,7 +18,9 @@ export default async function handler(
       res.setHeader("Cache-Control", "no-store");
       if ("/" in pages) {
         // Return .data for homepage to match frontend expectations
-        res.status(200).json(pages["/"].data ?? pages["/"]);
+        // Always return the flat data object, not wrapped in .data
+        const homepage = pages["/"];
+        res.status(200).json(homepage);
       } else {
         res.status(404).json({ error: "Page not found" });
       }
@@ -53,23 +55,29 @@ export default async function handler(
 
   if (req.method === "PUT") {
     // Update the homepage ("/")
-    const data = req.body as PageData;
+    let data = req.body as PageData | { data: PageData };
     if (!data) {
       res.status(400).json({ error: "Missing data" });
       return;
     }
+    // Accept both { data: PageData } and PageData directly
+    let pageData: PageData;
+    if ("data" in data) {
+      pageData = (data as any).data;
+    } else {
+      pageData = data as PageData;
+    }
     try {
-      // Always update the homepage at "/"
-      await import("../../../lib/data-provider").then(({ updatePage }) =>
-        updatePage("/", data)
-      );
+      await (await import("../../../lib/data-provider")).updatePage("/", pageData);
       res.status(200).json({ success: true });
     } catch (err: any) {
-      res.status(400).json({ error: err.message });
+      res.status(500).json({ error: err.message });
     }
     return;
+      return;
   }
 
+  // Fallback for unsupported methods
   res.setHeader("Allow", ["GET", "POST", "PUT"]);
   res.status(405).end(`Method ${req.method} Not Allowed`);
 }
