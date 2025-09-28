@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 "use client";
+import * as React from "react";
 
 import {
   ActionBar,
@@ -34,8 +35,6 @@ import {
   Title1,
   List,
   ListItem,
-  FluentProvider,
-  webLightTheme,
 } from "@fluentui/react-components";
 
 const usePuck = createUsePuck<UserConfig>();
@@ -206,96 +205,94 @@ const Tabs = ({
 
 const CustomPuck = ({ dataKey }: { dataKey: string }) => {
   const [hoveringTabs, setHoveringTabs] = useState(false);
-
   const [actionBarScroll, setActionBarScroll] = useState(0);
 
+  // No theme logic, rely on inherited FluentProvider from layout
   return (
-    <FluentProvider theme={webLightTheme}>
+    <div
+      style={{
+        position: "relative",
+      }}
+    >
+      <div style={{ position: "sticky", top: 0, zIndex: 2 }}>
+        <CustomHeader
+          onPublish={async (data: Data) => {
+            // Remove broken publish logic (path/setData not in scope for CustomHeader)
+          }}
+        />
+      </div>
       <div
         style={{
           position: "relative",
+          overflowY: hoveringTabs ? "hidden" : "auto",
+          zIndex: 0,
         }}
       >
-        <div style={{ position: "sticky", top: 0, zIndex: 2 }}>
-          <CustomHeader
-            onPublish={async (data: Data) => {
-              // Remove broken publish logic (path/setData not in scope for CustomHeader)
-            }}
-          />
-        </div>
+        <Puck.Preview />
+      </div>
+      <div
+        id="action-bar"
+        style={{
+          position: "fixed",
+          bottom: 0,
+          overflowY: "auto",
+          overflowX: "hidden",
+          maxHeight: "100vh",
+          width: "100%",
+          boxSizing: "border-box",
+          paddingTop: "calc(100vh - 58px)",
+          pointerEvents: hoveringTabs ? undefined : "none",
+          zIndex: 1,
+          overscrollBehavior: "none",
+        }}
+        onTouchStart={() => setHoveringTabs(false)}
+        onScrollCapture={(e) => {
+          setActionBarScroll(e.currentTarget.scrollTop);
+        }}
+      >
         <div
           style={{
+            background: "var(--colorNeutralBackground1)",
             position: "relative",
-            overflowY: hoveringTabs ? "hidden" : "auto",
+            pointerEvents: "none",
             zIndex: 0,
           }}
-        >
-          <Puck.Preview />
-        </div>
-        <div
-          id="action-bar"
-          style={{
-            position: "fixed",
-            bottom: 0,
-            overflowY: "auto",
-            overflowX: "hidden",
-            maxHeight: "100vh",
-            width: "100%",
-            boxSizing: "border-box",
-            paddingTop: "calc(100vh - 58px)",
-            pointerEvents: hoveringTabs ? undefined : "none",
-            zIndex: 1,
-            overscrollBehavior: "none",
+          onMouseOver={(e) => {
+            e.stopPropagation();
+            setHoveringTabs(true);
           }}
-          onTouchStart={() => setHoveringTabs(false)}
-          onScrollCapture={(e) => {
-            setActionBarScroll(e.currentTarget.scrollTop);
+          onTouchStart={(e) => {
+            e.stopPropagation();
+            setHoveringTabs(true);
+          }}
+          onMouseOut={() => {
+            setHoveringTabs(false);
           }}
         >
-          <div
-            style={{
-              background: "var(--colorNeutralBackground1)",
-              position: "relative",
-              pointerEvents: "none",
-              zIndex: 0,
+          {/* Force react to render when hoveringTabs changes, otherwise scroll gets trapped */}
+          {hoveringTabs && <span />}
+          <Tabs
+            onTabCollapse={() => {
+              setTimeout(() => setHoveringTabs(false), 50);
             }}
-            onMouseOver={(e) => {
-              e.stopPropagation();
-              setHoveringTabs(true);
-            }}
-            onTouchStart={(e) => {
-              e.stopPropagation();
-              setHoveringTabs(true);
-            }}
-            onMouseOut={() => {
-              setHoveringTabs(false);
-            }}
-          >
-            {/* Force react to render when hoveringTabs changes, otherwise scroll gets trapped */}
-            {hoveringTabs && <span />}
-            <Tabs
-              onTabCollapse={() => {
-                setTimeout(() => setHoveringTabs(false), 50);
-              }}
-              scrollTop={actionBarScroll}
-              tabs={[
-                { label: "Components", body: <Puck.Components /> },
-                { label: "Fields", body: <Puck.Fields /> },
-                { label: "Outline", body: <Puck.Outline /> },
-                {
-                  label: "Headings",
-                  body: (
-                    <div style={{ padding: 24 }}>
-                      <HeadingAnalyzer />
-                    </div>
-                  ),
-                },
-              ]}
-            />
-          </div>
+            scrollTop={actionBarScroll}
+            tabs={[
+              { label: "Components", body: <Puck.Components /> },
+              { label: "Fields", body: <Puck.Fields /> },
+              { label: "Outline", body: <Puck.Outline /> },
+              {
+                label: "Headings",
+                body: (
+                  <div style={{ padding: 24 }}>
+                    <HeadingAnalyzer />
+                  </div>
+                ),
+              },
+            ]}
+          />
         </div>
       </div>
-    </FluentProvider>
+    </div>
   );
 };
 
