@@ -36,13 +36,8 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     latestDataRef.current = data;
   }, [data]);
 
-  const handleChange = useCallback(
-    (nextData: Partial<UserData>) => {
-      latestDataRef.current = nextData;
-      setData(nextData);
-    },
-    [setData]
-  );
+  // Remove custom onChange logic and let Puck manage its own state
+  const handleChange = undefined;
 
   const handlePublish = useCallback(async () => {
     const latestData = latestDataRef.current;
@@ -78,8 +73,14 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           <Puck
             config={config}
             data={data}
-            onChange={handleChange}
-            onPublish={handlePublish}
+            onPublish={async (data) => {
+              const apiPath = path === "/" ? "/api/pages" : `/api/pages${path}`;
+              await fetch(apiPath, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ data }),
+              });
+            }}
             plugins={[headingAnalyzer]}
             headerPath={path}
             iframe={{

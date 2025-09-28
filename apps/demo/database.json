@@ -47,7 +47,7 @@
         "type": "Heading",
         "props": {
           "align": "left",
-          "text": "Heading",
+          "text": "Heading over here!",
           "size": "m",
           "layout": {
             "spanCol": 1,
