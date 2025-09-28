@@ -25,10 +25,19 @@ export const useDemoData = ({
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch(`/api/pages${path}`);
+        // Debug: log path and apiPath for troubleshooting
+        // eslint-disable-next-line no-console
+        console.log("useDemoData fetch", { path, isEdit, apiPath: path === "/" ? "/api/pages" : `/api/pages${path}` });
+        const apiPath = path === "/" ? "/api/pages" : `/api/pages${path}`;
+        const res = await fetch(apiPath);
         if (res.ok) {
           const json = await res.json();
-          setData(json);
+          // Always extract "/" key for homepage, both in view and edit mode
+          if (path === "/" && json && typeof json === "object" && "/" in json) {
+            setData(json["/"]);
+          } else {
+            setData(json);
+          }
         } else {
           setData({});
         }

@@ -29,60 +29,66 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   const params = new URL(window.location.href).searchParams;
 
   if (isEdit) {
-    return (
-      <div>
-        <Puck
-          config={config}
-          data={data}
-          onPublish={async (data) => {
-            await fetch(`/api/pages${path}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ data }),
-            });
-            setData(data);
-          }}
-          plugins={[headingAnalyzer]}
-          headerPath={path}
-          iframe={{
-            enabled: params.get("disableIframe") === "true" ? false : true,
-          }}
-          fieldTransforms={{
-            userField: ({ value }) => value, // Included to check types
-          }}
-          overrides={{
-            fieldTypes: {
-              // Example of user field provided via overrides
-              userField: ({ readOnly, field, name, value, onChange }) => (
-                <FieldLabel
-                  label={field.label || name}
-                  readOnly={readOnly}
-                  icon={<Type size={16} />}
-                >
-                  <AutoField
-                    field={{ type: "text" }}
-                    onChange={onChange}
-                    value={value}
-                  />
-                </FieldLabel>
-              ),
-            },
-            headerActions: ({ children }) => (
-              <>
-                <div>
-                  <Button href={path} newTab variant="secondary">
-                    View page
-                  </Button>
-                </div>
+    if (data && data.content) {
+      return (
+        <div>
+          <Puck
+            config={config}
+            data={data}
+            onPublish={async (data) => {
+              // Normalize: homepage PUT should be /api/pages, not /api/pages/
+              const apiPath = path === "/" ? "/api/pages" : `/api/pages${path}`;
+              await fetch(apiPath, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ data }),
+              });
+              setData(data);
+            }}
+            plugins={[headingAnalyzer]}
+            headerPath={path}
+            iframe={{
+              enabled: params.get("disableIframe") === "true" ? false : true,
+            }}
+            fieldTransforms={{
+              userField: ({ value }) => value, // Included to check types
+            }}
+            overrides={{
+              fieldTypes: {
+                // Example of user field provided via overrides
+                userField: ({ readOnly, field, name, value, onChange }) => (
+                  <FieldLabel
+                    label={field.label || name}
+                    readOnly={readOnly}
+                    icon={<Type size={16} />}
+                  >
+                    <AutoField
+                      field={{ type: "text" }}
+                      onChange={onChange}
+                      value={value}
+                    />
+                  </FieldLabel>
+                ),
+              },
+              headerActions: ({ children }) => (
+                <>
+                  <div>
+                    <Button href={path} newTab variant="secondary">
+                      View page
+                    </Button>
+                  </div>
 
-                {children}
-              </>
-            ),
-          }}
-          metadata={metadata}
-        />
-      </div>
-    );
+                  {children}
+                </>
+              ),
+            }}
+            metadata={metadata}
+          />
+        </div>
+      );
+    }
+    // Loading or missing content
+    return null;
   }
 
   if (data.content) {
