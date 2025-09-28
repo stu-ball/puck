@@ -69,7 +69,9 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     ) {
       return (
         <div>
-          <Title1 as="h1">Edit Mode</Title1>
+          <Title1 as="h1" tabIndex={0} style={{ marginBottom: "16px" }}>
+            Edit Mode
+          </Title1>
           <Puck
             config={config}
             data={data}
@@ -91,7 +93,6 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
             }}
             overrides={{
               fieldTypes: {
-                // Example of user field provided via overrides
                 userField: ({ readOnly, field, name, value, onChange }) => (
                   <FieldLabel
                     label={field.label || name}
@@ -102,20 +103,82 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                       field={{ type: "text" }}
                       onChange={onChange}
                       value={value}
+                      aria-label={field.label || name}
                     />
                   </FieldLabel>
                 ),
               },
               headerActions: ({ children }) => (
-                <>
-                  <div>
-                    <Button as="a" href={path} target="_blank" appearance="secondary">
-                      View page
-                    </Button>
-                  </div>
-
+                <nav aria-label="Editor actions" style={{ display: "flex", gap: 8 }}>
+                  <Button
+                    as="a"
+                    href={path}
+                    target="_blank"
+                    appearance="secondary"
+                    style={{
+                      color: "var(--colorBrandForeground1)",
+                      background: "var(--colorNeutralBackground1)",
+                    }}
+                  >
+                    View page
+                  </Button>
                   {children}
-                </>
+                </nav>
+              ),
+              // Example overlay override for accessibility
+              componentOverlay: ({ hover, isSelected }) => (
+                <div
+                  aria-hidden={!hover && !isSelected}
+                  role="presentation"
+                  tabIndex={-1}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    background: hover
+                      ? "var(--colorBrandBackground2)"
+                      : "transparent",
+                    outline: isSelected
+                      ? "2px solid var(--colorBrandStroke1)"
+                      : "",
+                    opacity: hover || isSelected ? 0.3 : 0,
+                    transition: "background 0.2s, outline 0.2s, opacity 0.2s",
+                  }}
+                />
+              ),
+              // Example action bar override for ARIA/keyboard
+              actionBar: ({ children, label, parentAction }) => (
+                <div
+                  role="toolbar"
+                  aria-label={label || "Component actions"}
+                  tabIndex={0}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    background: "var(--colorNeutralBackground2)",
+                    borderTop: "1px solid var(--colorNeutralStroke2)",
+                    padding: "8px 12px",
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Tab") {
+                      // Custom keyboard navigation if needed
+                    }
+                  }}
+                >
+                  {parentAction}
+                  {label && (
+                    <span
+                      style={{
+                        fontWeight: 600,
+                        color: "var(--colorBrandForeground1)",
+                        marginRight: 8,
+                      }}
+                    >
+                      {label}
+                    </span>
+                  )}
+                  {children}
+                </div>
               ),
             }}
             metadata={metadata}
@@ -139,11 +202,15 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
         textAlign: "center",
         justifyContent: "center",
         alignItems: "center",
+        background: "var(--colorNeutralBackground1)",
+        outline: "none",
       }}
     >
       <div>
-        <h1>404</h1>
-        <p>Page not found</p>
+        <Title1 as="h1" tabIndex={0} style={{ color: "var(--colorPaletteRedForeground1)" }}>
+          404
+        </Title1>
+        <p style={{ color: "var(--colorNeutralForeground3)" }}>Page not found</p>
       </div>
     </div>
   );

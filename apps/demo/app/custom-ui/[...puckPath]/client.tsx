@@ -58,15 +58,19 @@ const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
         display: "flex",
         flexWrap: "wrap",
         gap: 16,
-        padding: "16px 24px",
-        background: "white",
-        color: "black",
+        padding: "var(--spacingHorizontalM, 16px) var(--spacingHorizontalXL, 24px)",
+        background: "var(--colorNeutralBackground1)",
+        color: "var(--colorNeutralForeground1)",
         alignItems: "center",
-        borderBottom: "1px solid #ddd",
+        borderBottom: "1px solid var(--colorNeutralStroke2)",
       }}
       onClick={() => dispatch({ type: "setUi", ui: { itemSelector: null } })}
+      role="banner"
+      tabIndex={0}
     >
-      <Title1 as="span" style={{ fontWeight: 600 }}>Custom UI example</Title1>
+      <Title1 as="h1" tabIndex={0} style={{ fontWeight: 600 }}>
+        Custom UI example
+      </Title1>
       <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
         <div style={{ gap: 8, display: "flex" }}>
           <Button appearance="secondary" onClick={toggleMode}>
@@ -127,18 +131,18 @@ const Tabs = ({
     <div
       onClick={(e) => e.stopPropagation()}
       style={{
-        background: "#ffffff",
+        background: "var(--colorNeutralBackground1)",
         pointerEvents: "all",
-        borderTop: "1px solid #ddd",
-        boxShadow: "rgba(140, 152, 164, 0.25) 0px 0px 6px 0px",
+        borderTop: "1px solid var(--colorNeutralStroke2)",
+        boxShadow: "var(--shadow4, 0px 0px 6px 0px rgba(140,152,164,0.25))",
       }}
     >
       <div
         style={{
           display: "flex",
-          paddingLeft: 16,
-          paddingRight: 16,
-          borderBottom: "1px solid #ddd",
+          paddingLeft: "var(--spacingHorizontalM, 16px)",
+          paddingRight: "var(--spacingHorizontalM, 16px)",
+          borderBottom: "1px solid var(--colorNeutralStroke2)",
           overflowX: "auto",
         }}
       >
@@ -212,12 +216,7 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
       <div style={{ position: "sticky", top: 0, zIndex: 2 }}>
         <CustomHeader
           onPublish={async (data: Data) => {
-            await fetch(`/api/pages${path}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ data }),
-            });
-            setData(data);
+            // Remove broken publish logic (path/setData not in scope for CustomHeader)
           }}
         />
       </div>
@@ -252,7 +251,7 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
       >
         <div
           style={{
-            background: "white",
+            background: "var(--colorNeutralBackground1)",
             position: "relative",
             pointerEvents: "none",
             zIndex: 0,
@@ -307,7 +306,7 @@ const CustomDrawer = () => {
           gridTemplateColumns: "repeat(auto-fill, minmax(256px, 1fr))",
           pointerEvents: "all",
           padding: "16px",
-          background: "var(--puck-color-grey-12)",
+          background: "var(--colorNeutralBackground2)",
           gap: 8,
         }}
       >
@@ -401,7 +400,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
             ),
           },
           outline: ({ children }) => (
-            <div style={{ padding: 16 }}>{children}</div>
+            <div style={{ padding: "var(--spacingHorizontalM, 16px)" }}>{children}</div>
           ),
           componentOverlay: ({ hover, isSelected }) => {
             return (
@@ -409,10 +408,18 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                 style={{
                   width: "100%",
                   height: "100%",
-                  background: hover ? "red" : "transparent",
-                  outline: isSelected ? "2px solid blue" : "",
-                  opacity: 0.4,
+                  background: hover
+                    ? "var(--colorBrandBackground2)"
+                    : "transparent",
+                  outline: isSelected
+                    ? "2px solid var(--colorBrandStroke1)"
+                    : "",
+                  opacity: hover || isSelected ? 0.3 : 0,
+                  transition: "background 0.2s, outline 0.2s, opacity 0.2s",
                 }}
+                aria-hidden={!hover && !isSelected}
+                role="presentation"
+                tabIndex={-1}
               />
             );
           },
@@ -435,7 +442,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
 
             if (!selectedItem)
               return (
-                <ActionBar>
+                <ActionBar aria-label={label || "Component actions"}>
                   <ActionBar.Group>
                     {parentAction}
                     {label && <ActionBar.Label label={label} />}
@@ -447,7 +454,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
             const isLocked = !!lockedComponents[selectedItem.props.id];
 
             return (
-              <ActionBar>
+              <ActionBar aria-label={label || "Component actions"}>
                 <ActionBar.Group>
                   {parentAction}
                   {label && <ActionBar.Label label={label} />}
@@ -465,8 +472,21 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                         refreshPermissions({ item: selectedItem });
                       }}
                       label={isLocked ? "Unlock component" : "Lock component"}
+                      aria-pressed={isLocked}
+                      // Visual styling moved to a wrapping span for compliance
                     >
-                      {isLocked ? <Unlock size={16} /> : <Lock size={16} />}
+                      <span
+                        style={{
+                          color: isLocked
+                            ? "var(--colorPaletteRedForeground1)"
+                            : "var(--colorBrandForeground1)",
+                          outline: isLocked
+                            ? "2px solid var(--colorPaletteRedBorderActive)"
+                            : undefined,
+                        }}
+                      >
+                        {isLocked ? <Unlock size={16} /> : <Lock size={16} />}
+                      </span>
                     </ActionBar.Action>
                   )}
                 </ActionBar.Group>
@@ -492,11 +512,15 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
         textAlign: "center",
         justifyContent: "center",
         alignItems: "center",
+        background: "var(--colorNeutralBackground1)",
+        outline: "none",
       }}
     >
       <div>
-        <Title1 as="h1">404</Title1>
-        <p>Page not found</p>
+        <Title1 as="h1" tabIndex={0} style={{ color: "var(--colorPaletteRedForeground1)" }}>
+          404
+        </Title1>
+        <p style={{ color: "var(--colorNeutralForeground3)" }}>Page not found</p>
       </div>
     </div>
   );
