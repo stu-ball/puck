@@ -64,7 +64,7 @@ export const Hero: PuckComponent<HeroProps> = ({
           <div className={getClassName("actions")}>
             {buttons.map((button, i) => (
               <Button
-                key={i}
+                key={button.label + button.href + i}
                 href={button.href}
                 variant={button.variant}
                 size="large"

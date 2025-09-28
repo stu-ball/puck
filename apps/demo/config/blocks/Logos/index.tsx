@@ -63,7 +63,7 @@ export const Logos: ComponentConfig<LogosProps> = {
       <Section className={getClassName()}>
         <div className={getClassName("items")}>
           {logos.map((item, i) => (
-            <div key={i} className={getClassName("item")}>
+            <div key={(item.alt || "") + i} className={getClassName("item")}>
               <img
                 className={getClassName("image")}
                 alt={item.alt}

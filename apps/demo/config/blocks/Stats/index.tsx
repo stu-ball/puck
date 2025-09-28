@@ -48,7 +48,7 @@ export const Stats: ComponentConfig<StatsProps> = {
       <Section className={getClassName()} maxWidth={"916px"}>
         <div className={getClassName("items")}>
           {items.map((item, i) => (
-            <div key={i} className={getClassName("item")}>
+            <div key={(item.title || "") + i} className={getClassName("item")}>
               <div className={getClassName("label")}>{item.title}</div>
               <div className={getClassName("value")}>{item.description}</div>
             </div>

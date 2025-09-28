@@ -176,10 +176,10 @@ export const Hero: ComponentConfig<{
 
     return {
       props: {
-        title: quotes[props.quote.index].author,
-        description: quotes[props.quote.index].content,
+        title: props.title || quotes[props.quote.index].author,
+        description: props.description || quotes[props.quote.index].content,
       },
-      readOnly: { title: true, description: true },
+      readOnly: { title: false, description: false },
     };
   },
   resolveFields: async (data, { fields }) => {

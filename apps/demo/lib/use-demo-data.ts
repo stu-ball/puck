@@ -29,12 +29,15 @@ export const useDemoData = ({
         // eslint-disable-next-line no-console
         console.log("useDemoData fetch", { path, isEdit, apiPath: path === "/" ? "/api/pages" : `/api/pages${path}` });
         const apiPath = path === "/" ? "/api/pages" : `/api/pages${path}`;
-        const res = await fetch(apiPath);
+        // Add cache-busting param to always fetch fresh data
+        const res = await fetch(`${apiPath}?t=${Date.now()}`, {
+          cache: "no-store"
+        });
         if (res.ok) {
           const json = await res.json();
           // Always extract "/" key for homepage, both in view and edit mode
-          if (path === "/" && json && typeof json === "object" && "/" in json) {
-            setData(json["/"]);
+          if (path === "/") {
+            setData(json);
           } else {
             setData(json);
           }
@@ -51,12 +54,33 @@ export const useDemoData = ({
   }, [path, isEdit, key]);
 
   // Normalize blocks for editor compatibility
+  function ensureIds(blocks: any[]): any[] {
+    return blocks.map((block, idx) => {
+      if (!block.props) block.props = {};
+      // Always assign a new unique id if missing or duplicate
+      if (
+        !block.props.id ||
+        typeof block.props.id !== "string" ||
+        block.props.id === "" ||
+        blocks.filter(b => b.props && b.props.id === block.props.id).length > 1
+      ) {
+        block.props.id = `block-${idx}-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
+      }
+      // Recursively ensure ids for slot children
+      Object.keys(block.props).forEach((key) => {
+        if (Array.isArray(block.props[key]) && block.props[key].length && typeof block.props[key][0] === "object") {
+          block.props[key] = ensureIds(block.props[key]);
+        }
+      });
+      return block;
+    });
+  }
   const normalizedData = {
     ...data,
     blocks:
       (data && Array.isArray(data["zones"]?.["default-zone"]))
-        ? data["zones"]["default-zone"]
-        : (Array.isArray(data["content"]) ? data["content"] : [])
+        ? ensureIds(data["zones"]["default-zone"])
+        : (Array.isArray(data["content"]) ? ensureIds(data["content"]) : [])
   };
 
   // Normally this would happen on the server, but we can't

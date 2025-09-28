@@ -3,7 +3,7 @@
 import * as fs from "fs/promises";
 import * as path from "path";
 
-const DB_PATH = path.resolve(process.cwd(), "database.json");
+const DB_PATH = path.join(process.cwd(), "database.json");
 
 export interface PageData {
   content: any[];
@@ -36,7 +36,7 @@ export async function createPage(pathKey: string, data: PageData): Promise<void>
 
 export async function updatePage(pathKey: string, data: PageData): Promise<void> {
   const db = await readDB();
-  if (!db[pathKey]) throw new Error("Page does not exist");
+  // Upsert: create the page if it does not exist
   db[pathKey] = data;
   await writeDB(db);
 }

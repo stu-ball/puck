@@ -35,7 +35,11 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   const params = new URL(window.location.href).searchParams;
 
   if (isEdit) {
-    if (data && data.content) {
+    if (
+      data &&
+      (data.content ||
+        (data.zones && Array.isArray(data.zones["default-zone"])))
+    ) {
       return (
         <div>
           <Title1 as="h1">Edit Mode</Title1>
@@ -45,12 +49,32 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
             onPublish={async (data) => {
               // Normalize: homepage PUT should be /api/pages, not /api/pages/
               const apiPath = path === "/" ? "/api/pages" : `/api/pages${path}`;
+              // Ensure both content and zones["default-zone"] are kept in sync
+              let normalizedData = { ...data };
+              if (
+                data &&
+                data.zones &&
+                Array.isArray(data.zones["default-zone"])
+              ) {
+                normalizedData.content = data.zones["default-zone"];
+              } else if (data && Array.isArray(data.content)) {
+                normalizedData.zones = {
+                  ...data.zones,
+                  "default-zone": data.content,
+                };
+              }
               await fetch(apiPath, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ data }),
+                body: JSON.stringify({ data: normalizedData }),
               });
-              setData(data);
+              setData(normalizedData);
+              // Reload the view page tab if open
+              if (typeof window !== "undefined") {
+                const viewUrl = window.location.origin + path;
+                // Try to find an open tab with the view page and reload it
+                window.open(viewUrl, "_blank");
+              }
             }}
             plugins={[headingAnalyzer]}
             headerPath={path}
