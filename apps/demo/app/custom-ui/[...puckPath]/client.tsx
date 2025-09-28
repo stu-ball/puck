@@ -6,7 +6,6 @@
 import {
   ActionBar,
   AutoField,
-  Button,
   Data,
   FieldLabel,
   Puck,
@@ -28,6 +27,14 @@ import {
   Unlock,
   Type,
 } from "lucide-react";
+import {
+  Button,
+  TabList,
+  Tab,
+  Title1,
+  List,
+  ListItem,
+} from "@fluentui/react-components";
 
 const usePuck = createUsePuck<UserConfig>();
 
@@ -59,15 +66,16 @@ const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
       }}
       onClick={() => dispatch({ type: "setUi", ui: { itemSelector: null } })}
     >
-      <span style={{ fontWeight: 600 }}>Custom UI example </span>
+      <Title1 as="span" style={{ fontWeight: 600 }}>Custom UI example</Title1>
       <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
         <div style={{ gap: 8, display: "flex" }}>
-          <Button onClick={toggleMode} variant="secondary">
+          <Button appearance="secondary" onClick={toggleMode}>
             Switch to {previewMode === "edit" ? "interactive" : "edit"}
           </Button>
           <Button
+            appearance="primary"
             onClick={() => onPublish(getPuck().appState.data)}
-            icon={<Globe size="14" />}
+            icon={<Globe size={14} />}
           >
             Publish
           </Button>
@@ -134,44 +142,13 @@ const Tabs = ({
           overflowX: "auto",
         }}
       >
-        {tabs.map((tab, idx) => {
-          const isCurrentTab = currentTab === idx;
-          return (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => {
-                if (currentTab === idx) {
-                  setCurrentTab(-1);
-                } else {
-                  setCurrentTab(idx);
-                  if (scrollTop < 20) {
-                    setTimeout(() => {
-                      document
-                        .querySelector("#action-bar")
-                        ?.scroll({ top: 128, behavior: "smooth" });
-                    }, 25);
-                  }
-                }
-              }}
-              style={{
-                fontFamily: "inherit",
-                fontSize: 16,
-                padding: "16px 16px",
-                paddingTop: 19,
-                color: isCurrentTab ? "var(--puck-color-azure-04)" : "black",
-                border: "none",
-                borderBottom: isCurrentTab
-                  ? "3px solid var(--puck-color-azure-04)"
-                  : "3px solid transparent",
-                background: "white",
-                cursor: "pointer",
-              }}
-            >
+        <TabList selectedValue={currentTab} onTabSelect={(_, data) => setCurrentTab(Number(data.value))}>
+          {tabs.map((tab, idx) => (
+            <Tab key={idx} value={idx}>
               {tab.label}
-            </button>
-          );
-        })}
+            </Tab>
+          ))}
+        </TabList>
         <div
           style={{
             marginLeft: "auto",
@@ -518,7 +495,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
       }}
     >
       <div>
-        <h1>404</h1>
+        <Title1 as="h1">404</Title1>
         <p>Page not found</p>
       </div>
     </div>

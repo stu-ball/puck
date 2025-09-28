@@ -1,11 +1,17 @@
 "use client";
 
-import { AutoField, Button, FieldLabel, Puck, Render } from "@/core";
+import { AutoField, FieldLabel, Puck, Render } from "@/core";
 import headingAnalyzer from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config from "../../config";
 import { useDemoData } from "../../lib/use-demo-data";
 import { useEffect, useState } from "react";
 import { Type } from "lucide-react";
+import {
+  Button,
+  Title1,
+  List,
+  ListItem,
+} from "@fluentui/react-components";
 
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   const metadata = {
@@ -32,6 +38,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     if (data && data.content) {
       return (
         <div>
+          <Title1 as="h1">Edit Mode</Title1>
           <Puck
             config={config}
             data={data}
@@ -73,7 +80,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
               headerActions: ({ children }) => (
                 <>
                   <div>
-                    <Button href={path} newTab variant="secondary">
+                    <Button as="a" href={path} target="_blank" appearance="secondary">
                       View page
                     </Button>
                   </div>

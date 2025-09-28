@@ -1,4 +1,7 @@
+"use client";
 import "./styles.css";
+import * as React from "react";
+import { FluentProvider, webLightTheme } from "@fluentui/react-components";
 
 export default function RootLayout({
   children,
@@ -17,7 +20,9 @@ export default function RootLayout({
         )}
       </head>
       <body>
-        <div>{children}</div>
+        <FluentProvider theme={webLightTheme}>
+          <div>{children}</div>
+        </FluentProvider>
       </body>
     </html>
   );
