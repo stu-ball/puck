@@ -1,0 +1,61 @@
+:root {
+  /* FluentUI Neutral Colors */
+  --puck-bg: var(--colorNeutralBackground1, #ffffff);
+  --puck-bg-alt: var(--colorNeutralBackground2, #f3f2f1);
+  --puck-border: var(--colorNeutralStroke1, #e1dfdd);
+  --puck-border-strong: var(--colorNeutralStroke2, #8a8886);
+  --puck-text: var(--colorNeutralForeground1, #201f1e);
+  --puck-text-muted: var(--colorNeutralForeground2, #605e5c);
+  --puck-primary: var(--colorBrandBackground, #0078d4);
+  --puck-primary-hover: var(--colorBrandBackgroundHover, #106ebe);
+  --puck-primary-text: var(--colorBrandForeground1, #ffffff);
+  --puck-danger: var(--colorPaletteRedBackground3, #a4262c);
+  --puck-danger-text: var(--colorPaletteRedForeground1, #ffffff);
+  --puck-success: var(--colorPaletteGreenBackground3, #107c10);
+  --puck-success-text: var(--colorPaletteGreenForeground1, #ffffff);
+}
+
+/* Example usage for Puck UI elements */
+.puck-container {
+  background: var(--puck-bg);
+  color: var(--puck-text);
+  border: 1px solid var(--puck-border);
+}
+
+.puck-container--alt {
+  background: var(--puck-bg-alt);
+}
+
+.puck-heading {
+  color: var(--puck-text);
+}
+
+.puck-heading--muted {
+  color: var(--puck-text-muted);
+}
+
+.puck-button {
+  background: var(--puck-primary);
+  color: var(--puck-primary-text);
+  border: 1px solid var(--puck-primary);
+}
+
+.puck-button:hover {
+  background: var(--puck-primary-hover);
+}
+
+.puck-danger {
+  background: var(--puck-danger);
+  color: var(--puck-danger-text);
+}
+
+.puck-success {
+  background: var(--puck-success);
+  color: var(--puck-success-text);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --puck-text: var(--colorNeutralForegroundOnBrand, #ffffff);
+  }
+}

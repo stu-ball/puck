@@ -87,7 +87,7 @@ export default async function Page({
       if (!secret) {
         return (
           <div style={{ padding: 24 }}>
-            <h1>Editor disabled</h1>
+            <h1 className="puck-heading">Editor disabled</h1>
             <p>
               PUCK_SECRET is not set. To enable the editor at /puck/.../edit
               routes, set the PUCK_SECRET environment variable.
@@ -99,7 +99,7 @@ export default async function Page({
       if (!(await isAuthorizedServer())) {
         return (
           <div style={{ padding: 24 }}>
-            <h1>Unauthorized</h1>
+            <h1 className="puck-heading">Unauthorized</h1>
             <p>
               You are not authorized to access the editor. Provide the correct
               secret via the Authorization header (Bearer {'<secret>'}), the

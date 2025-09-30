@@ -1,0 +1,35 @@
+:root {
+  /* FluentUI Typography */
+  --puck-font-family: var(--fontFamilyBase, "Segoe UI", Arial, sans-serif);
+  --puck-font-size: var(--fontSizeBase300, 16px);
+  --puck-font-size-lg: var(--fontSizeHero700, 32px);
+  --puck-font-size-md: var(--fontSizeBase500, 20px);
+  --puck-font-size-sm: var(--fontSizeBase200, 14px);
+  --puck-font-weight: var(--fontWeightRegular, 400);
+  --puck-font-weight-bold: var(--fontWeightBold, 700);
+  --puck-line-height: var(--lineHeightBase300, 1.5);
+}
+
+/* Example usage for Puck UI elements */
+.puck-heading {
+  font-family: var(--puck-font-family);
+  font-size: var(--puck-font-size-lg);
+  font-weight: var(--puck-font-weight-bold);
+  line-height: var(--puck-line-height);
+  margin: 0 0 0.5em 0;
+}
+
+.puck-heading--md {
+  font-size: var(--puck-font-size-md);
+}
+
+.puck-heading--sm {
+  font-size: var(--puck-font-size-sm);
+}
+
+.puck-text {
+  font-family: var(--puck-font-family);
+  font-size: var(--puck-font-size);
+  font-weight: var(--puck-font-weight);
+  line-height: var(--puck-line-height);
+}
